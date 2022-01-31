@@ -1,0 +1,9 @@
+{
+    "prefix": "then",
+    "body": [
+        "then",
+        "\t${1:: # body}",
+        "fi\n"
+    ],
+    "description": "if condition is false then run command (short circuit)"
+}

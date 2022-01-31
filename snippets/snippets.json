@@ -82,15 +82,15 @@
     ],
     "description": "declare an array"
   },
-  "array.delete-at": {
-    "prefix": "array delete at",
-    "body": "unset \"${1:myArray}[${2:index}]\"\n",
-    "description": "delete element at index from array"
-  },
   "array.delete": {
     "prefix": "array delete",
     "body": "unset ${1:myArray}\n",
     "description": "delete entire array"
+  },
+  "array.delete-at": {
+    "prefix": "array delete at",
+    "body": "unset \"${1:myArray}[${2:index}]\"\n",
+    "description": "delete element at index from array"
   },
   "array.filter": {
     "prefix": "array filter",
@@ -338,15 +338,15 @@
     ],
     "description": "write to a file"
   },
-  "filesystem.directory-create-nested": {
-    "prefix": "directory create nested",
-    "body": "mkdir -p ${1|\"parent dir/child dir\",\"${pathToCreate}\"|}\n",
-    "description": "create nested directories"
-  },
   "filesystem.directory-create": {
     "prefix": "directory create",
     "body": "mkdir \"${1:directory name}\"\n",
     "description": "create directory"
+  },
+  "filesystem.directory-create-nested": {
+    "prefix": "directory create nested",
+    "body": "mkdir -p ${1|\"parent dir/child dir\",\"${pathToCreate}\"|}\n",
+    "description": "create nested directories"
   },
   "filesystem.directory-delete-nested": {
     "prefix": [
@@ -382,24 +382,6 @@
     "body": "${1:result}=\\$(find \"${2|/path/to/search,${pathToSearch}|}\" -maxdepth ${3|1,2,3,4,5,6,7,8,9|} -type f -exec grep \"${4:criteria}\" {} +)\n",
     "description": "find files which contain search criteria in given path and below"
   },
-  "filesystem.file-write-multiline-sudo": {
-    "prefix": "file write multiline sudo",
-    "body": [
-      "cat << EOF | sudo tee \"${1|/path/to/file,${filePath}|}\" >/dev/null",
-      "${2:first line\nsecond line\n...}",
-      "EOF\n"
-    ],
-    "description": "write multiple lines into file when sudo permission is required"
-  },
-  "filesystem.file-write-multiline": {
-    "prefix": "file write multiline",
-    "body": [
-      "cat >\"${1|/path/to/file,${filePath}|}\" <<EOF",
-      "${2:first line\nsecond line\n...}",
-      "EOF\n"
-    ],
-    "description": "write multiple lines into file"
-  },
   "filesystem.file-write": {
     "prefix": "file write",
     "body": [
@@ -410,6 +392,24 @@
       "done\n"
     ],
     "description": "write to a file"
+  },
+  "filesystem.file-write-multiline": {
+    "prefix": "file write multiline",
+    "body": [
+      "cat >\"${1|/path/to/file,${filePath}|}\" <<EOF",
+      "${2:first line\nsecond line\n...}",
+      "EOF\n"
+    ],
+    "description": "write multiple lines into file"
+  },
+  "filesystem.file-write-multiline-sudo": {
+    "prefix": "file write multiline sudo",
+    "body": [
+      "cat << EOF | sudo tee \"${1|/path/to/file,${filePath}|}\" >/dev/null",
+      "${2:first line\nsecond line\n...}",
+      "EOF\n"
+    ],
+    "description": "write multiple lines into file when sudo permission is required"
   },
   "filesystem.files-iterate": {
     "prefix": "iterate files",
@@ -447,15 +447,6 @@
     ],
     "description": "check if file is executable"
   },
-  "filesystem.if-file-exists-and-is-symbolic-link": {
-    "prefix": "if file link",
-    "body": [
-      "if [ -h \"${1|/path/to/file,${filePath}|}\" ]; then",
-      "\t${2:echo \"Path \\\"${1}\\\" is a symbolic link\"}",
-      "fi\n"
-    ],
-    "description": "if given path is a symbolic link"
-  },
   "filesystem.if-file-exists": {
     "prefix": "if file exists",
     "body": [
@@ -464,6 +455,15 @@
       "fi\n"
     ],
     "description": "check if file exists"
+  },
+  "filesystem.if-file-exists-and-is-symbolic-link": {
+    "prefix": "if file link",
+    "body": [
+      "if [ -h \"${1|/path/to/file,${filePath}|}\" ]; then",
+      "\t${2:echo \"Path \\\"${1}\\\" is a symbolic link\"}",
+      "fi\n"
+    ],
+    "description": "if given path is a symbolic link"
   },
   "filesystem.if-file-not-empty": {
     "prefix": "if file not empty",
@@ -545,18 +545,6 @@
     ],
     "description": "if numbers are equal"
   },
-  "float.if-greater-or-equal": {
-    "prefix": [
-      "if float >=",
-      "if double >="
-    ],
-    "body": [
-      "if (( $(echo \"\\${${1:num1}} >= \\${${2:num2}}\" | bc -l) )); then",
-      "\t${3:echo \"greater or equal\"}",
-      "fi\n"
-    ],
-    "description": "if num1 is greater to num2"
-  },
   "float.if-greater": {
     "prefix": [
       "if float >",
@@ -569,17 +557,17 @@
     ],
     "description": "if num2 is greater than num2"
   },
-  "float.if-lesser-or-equal": {
+  "float.if-greater-or-equal": {
     "prefix": [
-      "if float <=",
-      "if double <="
+      "if float >=",
+      "if double >="
     ],
     "body": [
-      "if (( $(echo \"\\${${1:num1}} <= \\${${2:num2}}\" | bc -l) )); then",
-      "\t${3:echo \"lesser or equal\"}",
+      "if (( $(echo \"\\${${1:num1}} >= \\${${2:num2}}\" | bc -l) )); then",
+      "\t${3:echo \"greater or equal\"}",
       "fi\n"
     ],
-    "description": "if num1 is lesser or equal to num2"
+    "description": "if num1 is greater to num2"
   },
   "float.if-lesser": {
     "prefix": [
@@ -592,6 +580,18 @@
       "fi\n"
     ],
     "description": "if num1 is lesser than num2"
+  },
+  "float.if-lesser-or-equal": {
+    "prefix": [
+      "if float <=",
+      "if double <="
+    ],
+    "body": [
+      "if (( $(echo \"\\${${1:num1}} <= \\${${2:num2}}\" | bc -l) )); then",
+      "\t${3:echo \"lesser or equal\"}",
+      "fi\n"
+    ],
+    "description": "if num1 is lesser or equal to num2"
   },
   "float.if-not-equal": {
     "prefix": [
@@ -970,6 +970,21 @@
     ],
     "description": "calculate n!"
   },
+  "fn-fx.fn-math-fibonacci": {
+    "prefix": "fn math fibonacci",
+    "body": [
+      "# Usage: fibonacci n",
+      "fibonacci ()",
+      "{",
+      "\tif ((\\$1 < 2)); then ",
+      "\t\techo \"\\$1\"",
+      "\telse",
+      "\t\techo \\$((\\$(fibonacci \\$((\\$1 - 1))) + \\$(fibonacci \\$((\\$1 - 2)))))",
+      "\tfi",
+      "}\n"
+    ],
+    "description": "calculate Nth fibonacci number"
+  },
   "fn-fx.fn-math-fibonacci-series": {
     "prefix": "fn math fibonacci series",
     "body": [
@@ -988,21 +1003,6 @@
       "}\n"
     ],
     "description": "array of fibonacci series"
-  },
-  "fn-fx.fn-math-fibonacci": {
-    "prefix": "fn math fibonacci",
-    "body": [
-      "# Usage: fibonacci n",
-      "fibonacci ()",
-      "{",
-      "\tif ((\\$1 < 2)); then ",
-      "\t\techo \"\\$1\"",
-      "\telse",
-      "\t\techo \\$((\\$(fibonacci \\$((\\$1 - 1))) + \\$(fibonacci \\$((\\$1 - 2)))))",
-      "\tfi",
-      "}\n"
-    ],
-    "description": "calculate Nth fibonacci number"
   },
   "fn-fx.fn-math-product": {
     "prefix": "fn math product",
@@ -1428,15 +1428,20 @@
     "body": "git checkout .\n",
     "description": "revert tracked changes"
   },
+  "git.clone": {
+    "prefix": "git clone",
+    "body": "git clone https://${1:github.com}/${2:user}/${3:repository}.git\n",
+    "description": "clone remote repository to local machine."
+  },
   "git.clone-branch": {
     "prefix": "git clone branch",
     "body": "git clone -b ${1:branchName} https://${2:github.com}/${3:user}/${4:repository}.git\n",
     "description": "clone a remote branch to local machine."
   },
-  "git.clone": {
-    "prefix": "git clone",
-    "body": "git clone https://${1:github.com}/${2:user}/${3:repository}.git\n",
-    "description": "clone remote repository to local machine."
+  "git.commit": {
+    "prefix": "git commit",
+    "body": "git commit -m \"${1:commit message}\"\n",
+    "description": "commit changes."
   },
   "git.commit-list-notpushed": {
     "prefix": "git commit list notPushed",
@@ -1452,11 +1457,6 @@
     "prefix": "git commit undo",
     "body": "git reset --${1|soft,hard|} HEAD~${2|1,2,3,4,5,6,7,8,9|}\n",
     "description": "undo last N commits (soft: preserve local changes, hard: delete local changes"
-  },
-  "git.commit": {
-    "prefix": "git commit",
-    "body": "git commit -m \"${1:commit message}\"\n",
-    "description": "commit changes."
   },
   "git.config-list": {
     "prefix": "git config list",
@@ -1558,17 +1558,6 @@
     ],
     "description": "send http request with custom header, using curl"
   },
-  "http.post-send-file": {
-    "prefix": "http POST file",
-    "body": [
-      "curl --request POST -sL \\",
-      "\t--user-agent '${1|Shellman,Your custom user agent|}' \\",
-      "\t--url ${2|'http://example.com',\"${url}\"|} \\",
-      "\t--form ${3|'key=value',\"${key}\"=\"${value}\"|} \\",
-      "\t--form ${4|'file=@/path/to/file',file=@\"${pathToFile}\"|}\n"
-    ],
-    "description": "send file with http POST, using curl"
-  },
   "http.post": {
     "prefix": [
       "http POST",
@@ -1581,6 +1570,17 @@
       "\t--data ${4|'key=value',\"${key}\"=\"${value}\"|} \n"
     ],
     "description": "send data with http POST/PUT, using curl"
+  },
+  "http.post-send-file": {
+    "prefix": "http POST file",
+    "body": [
+      "curl --request POST -sL \\",
+      "\t--user-agent '${1|Shellman,Your custom user agent|}' \\",
+      "\t--url ${2|'http://example.com',\"${url}\"|} \\",
+      "\t--form ${3|'key=value',\"${key}\"=\"${value}\"|} \\",
+      "\t--form ${4|'file=@/path/to/file',file=@\"${pathToFile}\"|}\n"
+    ],
+    "description": "send file with http POST, using curl"
   },
   "input.password": {
     "prefix": "input password",
@@ -1611,15 +1611,6 @@
     ],
     "description": "if integers are equal"
   },
-  "integer.if-greater-or-equal": {
-    "prefix": "if int >=",
-    "body": [
-      "if (( ${1:int1} >= ${2:int2} )); then",
-      "\t${3:echo \"greater or equal\"}",
-      "fi\n"
-    ],
-    "description": "if int1 is greater or equal to int2"
-  },
   "integer.if-greater": {
     "prefix": "if int >",
     "body": [
@@ -1629,14 +1620,14 @@
     ],
     "description": "if int1 is greater than int2"
   },
-  "integer.if-lesser-or-equal": {
-    "prefix": "if int <=",
+  "integer.if-greater-or-equal": {
+    "prefix": "if int >=",
     "body": [
-      "if (( ${1:int1} <= ${2:int2} )); then",
-      "\t${3:echo \"lesser or equal\"}",
+      "if (( ${1:int1} >= ${2:int2} )); then",
+      "\t${3:echo \"greater or equal\"}",
       "fi\n"
     ],
-    "description": "if int1 is lesser or equal to int2"
+    "description": "if int1 is greater or equal to int2"
   },
   "integer.if-lesser": {
     "prefix": "if int <",
@@ -1647,6 +1638,15 @@
     ],
     "description": "if int1 is lesser than int2"
   },
+  "integer.if-lesser-or-equal": {
+    "prefix": "if int <=",
+    "body": [
+      "if (( ${1:int1} <= ${2:int2} )); then",
+      "\t${3:echo \"lesser or equal\"}",
+      "fi\n"
+    ],
+    "description": "if int1 is lesser or equal to int2"
+  },
   "integer.if-not-equal": {
     "prefix": "if int !=",
     "body": [
@@ -1656,6 +1656,15 @@
     ],
     "description": "if integers are not equal"
   },
+  "internal.for-i": {
+    "prefix": "for i",
+    "body": [
+      "for((i=0;i<${1:n};i++)); do",
+      "\t${2:echo \"\\${i\\}\"}",
+      "done\n"
+    ],
+    "description": "for loop by index"
+  },
   "internal.for-i-j": {
     "prefix": "for ij",
     "body": [
@@ -1663,15 +1672,6 @@
       "\tfor((j=0;j<${2:m};j++)); do",
       "\t\t${3:echo \"\\${i\\}, \\${j\\}\"}",
       "\tdone",
-      "done\n"
-    ],
-    "description": "for loop by index"
-  },
-  "internal.for-i": {
-    "prefix": "for i",
-    "body": [
-      "for((i=0;i<${1:n};i++)); do",
-      "\t${2:echo \"\\${i\\}\"}",
       "done\n"
     ],
     "description": "for loop by index"
@@ -1717,15 +1717,15 @@
     ],
     "description": "if"
   },
-  "internal.iff-not": {
-    "prefix": "iff not",
-    "body": "[ ${1:condition} ] || ${2:command}\n",
-    "description": "if condition is false then run command (short circuit)"
-  },
   "internal.iff": {
     "prefix": "iff",
     "body": "[ ${1:condition} ] && ${2:command}\n",
     "description": "if condition is true then run command (short circuit)"
+  },
+  "internal.iff-not": {
+    "prefix": "iff not",
+    "body": "[ ${1:condition} ] || ${2:command}\n",
+    "description": "if condition is false then run command (short circuit)"
   },
   "internal.infinite-loop": {
     "prefix": "loop infinite",
@@ -1752,6 +1752,15 @@
       "esac\n"
     ],
     "description": "switch case"
+  },
+  "internal.then": {
+    "prefix": "then",
+    "body": [
+      "then",
+      "\t${1:: # body}",
+      "fi\n"
+    ],
+    "description": "if condition is false then run command (short circuit)"
   },
   "internal.until": {
     "prefix": "loop until",
@@ -1821,15 +1830,15 @@
     "body": "((${1|int--,--int|}))\n",
     "description": "decrement integer variable"
   },
-  "math.divide-equal": {
-    "prefix": "math /=",
-    "body": "((${1:int1} /= ${2:int2}))\n",
-    "description": "divide int1 by int2 and assign the whole part to int1"
-  },
   "math.divide": {
     "prefix": "math /",
     "body": "${1:result}=\\$((${2:int1} / ${3:int2}))\n",
     "description": "divide int1 by int2 as integers and returns whole part"
+  },
+  "math.divide-equal": {
+    "prefix": "math /=",
+    "body": "((${1:int1} /= ${2:int2}))\n",
+    "description": "divide int1 by int2 and assign the whole part to int1"
   },
   "math.expr": {
     "prefix": [
@@ -1854,25 +1863,25 @@
     "body": "((${1:int1} -= ${2:int2}))\n",
     "description": "subtract int2 from int1 and assign the result to int1"
   },
-  "math.modulus-equal": {
-    "prefix": "math %=",
-    "body": "((${1:int1} %= ${2:int2}))\n",
-    "description": "divide int1 by int2 and assign the reminder to int1"
-  },
   "math.modulus": {
     "prefix": "math %",
     "body": "${1:result}=\\$((${2:int1} % ${3:int2}))\n",
     "description": "reminder of dividing int1 by int2 (modulus)"
   },
-  "math.multiply-equal": {
-    "prefix": "math *=",
-    "body": "((${1:int1} *= ${2:int2}))\n",
-    "description": "multiply int1 by int2 and assign the result to int1"
+  "math.modulus-equal": {
+    "prefix": "math %=",
+    "body": "((${1:int1} %= ${2:int2}))\n",
+    "description": "divide int1 by int2 and assign the reminder to int1"
   },
   "math.multiply": {
     "prefix": "math *",
     "body": "${1:result}=\\$((${2:int1} * ${3:int2}))\n",
     "description": "multiply int1 by int2"
+  },
+  "math.multiply-equal": {
+    "prefix": "math *=",
+    "body": "((${1:int1} *= ${2:int2}))\n",
+    "description": "multiply int1 by int2 and assign the result to int1"
   },
   "math.plus-equal": {
     "prefix": "math +=",
@@ -1974,6 +1983,16 @@
     ],
     "description": "parse command line arguments (flags/switches)"
   },
+  "misc.bash_shebang": {
+    "prefix": [
+      "#!/usr/bin/bash",
+      "#!/bin/bash",
+      "#!bash",
+      "bash"
+    ],
+    "body": "#!/usr/bin/env bash\n\nset -ue${DEBUG+xv}\n\n",
+    "description": "bash shell shebang"
+  },
   "misc.echo-text": {
     "prefix": [
       "echo text",
@@ -2010,7 +2029,6 @@
   "misc.shebang": {
     "prefix": [
       "shebang",
-      "bash",
       "first line"
     ],
     "body": "#!/usr/bin/env ${1|bash,node,perl,php,python,python3,ruby|}\n\n",
@@ -2241,6 +2259,11 @@
     "body": "${1:reversed}=\\$(echo -e \"\\${${2:string}}\" | rev)\n",
     "description": "reverse string characters"
   },
+  "string.substring": {
+    "prefix": "string substring",
+    "body": "${1:substring}=\\$(echo -e \"\\${${2:string}:\\${${3:offset}\\}:\\${${4:length}\\}}\")\n",
+    "description": "part of the string from offset (zero indexed) up to characters length"
+  },
   "string.substring-count": {
     "prefix": [
       "string substring count",
@@ -2252,11 +2275,6 @@
     ],
     "description": "frequency of a substring in a string"
   },
-  "string.substring": {
-    "prefix": "string substring",
-    "body": "${1:substring}=\\$(echo -e \"\\${${2:string}:\\${${3:offset}\\}:\\${${4:length}\\}}\")\n",
-    "description": "part of the string from offset (zero indexed) up to characters length"
-  },
   "string.to-lower": {
     "prefix": "string toLower",
     "body": "${1:toLower}=\\$(echo -e \"\\${${2:string}}\" | tr '[:upper:]' '[:lower:]')\n",
@@ -2266,6 +2284,11 @@
     "prefix": "string toUpper",
     "body": "${1:toUpper}=\\$(echo -e \"\\${${2:string}}\" | tr '[:lower:]' '[:upper:]')\n",
     "description": "convert string to uppercase"
+  },
+  "string.trim": {
+    "prefix": "string trim",
+    "body": "${1:trimmed}=\\$(echo -e \"\\${${2:string}}\" |  sed -e 's/^[[:space:]]*//' | sed -e 's/[[:space:]]*\\$//')\n",
+    "description": "remove leading and trailing white space(s)"
   },
   "string.trim-all": {
     "prefix": "string trim all",
@@ -2281,11 +2304,6 @@
     "prefix": "string trim right",
     "body": "${1:trimmed}=\\$(echo -e \"\\${${2:string}}\" | sed -e 's/[[:space:]]*$//')\n",
     "description": "remove trailing white space(s)"
-  },
-  "string.trim": {
-    "prefix": "string trim",
-    "body": "${1:trimmed}=\\$(echo -e \"\\${${2:string}}\" |  sed -e 's/^[[:space:]]*//' | sed -e 's/[[:space:]]*\\$//')\n",
-    "description": "remove leading and trailing white space(s)"
   },
   "system.distro-codename": {
     "prefix": "system distro codename",
@@ -2388,6 +2406,14 @@
     "body": "sudo systemctl ${1|enable,enable --now,disable,disable --now,start,stop,reload,restart,status|} ${2|'serviceName',\"${serviceName}\"|} # use '--user' for user services\n",
     "description": "manage service operations"
   },
+  "system.uptime": {
+    "prefix": "system uptime",
+    "body": [
+      "${1:systemUptime}=\\$(uptime ${2|-p,-s|})",
+      "${3:echo \"\\${${1}\\}\"}\n"
+    ],
+    "description": "system uptime. -p: --pretty, -s: since"
+  },
   "system.uptime-seconds": {
     "prefix": "system uptime seconds",
     "body": [
@@ -2396,14 +2422,6 @@
       "${3:echo \"\\${${1}\\}\"}\n"
     ],
     "description": "system uptime in seconds."
-  },
-  "system.uptime": {
-    "prefix": "system uptime",
-    "body": [
-      "${1:systemUptime}=\\$(uptime ${2|-p,-s|})",
-      "${3:echo \"\\${${1}\\}\"}\n"
-    ],
-    "description": "system uptime. -p: --pretty, -s: since"
   },
   "time.epoch-seconds": {
     "prefix": "time seconds epoch",

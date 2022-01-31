@@ -1,0 +1,10 @@
+{
+  "prefix": [
+    "#!/usr/bin/bash",
+    "#!/bin/bash",
+    "#!bash",
+    "bash"
+  ],
+  "body": "#!/usr/bin/env bash\n\nset -ue${DEBUG+xv}\n\n",
+  "description": "bash shell shebang"
+}
